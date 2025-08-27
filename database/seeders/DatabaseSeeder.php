@@ -12,6 +12,7 @@ class DatabaseSeeder extends Seeder
             DepartmentSeeder::class,
             PositionSeeder::class,
             AdminUserSeeder::class, // user dibuat setelah dept & position ada
+            UpsellingBeverageSeeder::class,
         ]);
     }
 }

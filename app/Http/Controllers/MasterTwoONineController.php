@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 class MasterTwoONineController extends Controller
 {
     public function index() {
-        return MasterTwoONine::orderBy('date','desc')->paginate(20);
+        return MasterTwoONine::latest('id')->paginate(20);
     }
     // public function index()
     // {

@@ -10,7 +10,9 @@ use App\Http\Controllers\{
     BreakfastTwoONineController,
     LunchTwoONineController,
     DinnerTwoONineController,
-    ThematicController
+    ThematicController,
+    UpsellingController,
+    BeverageController
 };
 
 Route::prefix('auth')->group(function () {
@@ -40,6 +42,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('users', UserController::class);
     // Master data Thematic
     Route::apiResource('thematics', ThematicController::class);
+    Route::apiResource('beverages', BeverageController::class);
+    Route::apiResource('upsellings', UpsellingController::class);
 
     // User management khusus admin
     // Route::middleware('admin')->group(function () {
