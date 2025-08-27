@@ -22,9 +22,6 @@ Route::prefix('auth')->group(function () {
 });
 
 Route::middleware('auth:sanctum')->prefix('two_o_nine')->group(function () {
-    // Master data Thematic
-    Route::apiResource('thematics', ThematicController::class);
-
     // Masters
     Route::apiResource('masters', MasterTwoONineController::class);
 
@@ -41,6 +38,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('positions', PositionController::class);
     // Route::get('user', UserController::class);
     Route::apiResource('users', UserController::class);
+    // Master data Thematic
+    Route::apiResource('thematics', ThematicController::class);
 
     // User management khusus admin
     // Route::middleware('admin')->group(function () {

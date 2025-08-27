@@ -48,7 +48,7 @@ class BreakfastTwoONineController extends Controller
         $data = $request->validate($this->rules());
         $data['master_two_o_nine_id'] = $master->id;
         $row = BreakfastTwoONine::create($data);
-        return response()->json($row, 201);
+        return response()->json($row, 200);
     }
 
     public function show(MasterTwoONine $master, BreakfastTwoONine $breakfast) {

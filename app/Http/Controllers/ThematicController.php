@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Thematic;
 use Illuminate\Http\Request;
 
-class ThematicCOntroller extends Controller
+class ThematicController extends Controller
 {
     public function index() { return Thematic::orderBy('name')->get(); }
 

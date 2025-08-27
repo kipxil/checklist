@@ -10,13 +10,24 @@ class MasterTwoONineController extends Controller
     public function index() {
         return MasterTwoONine::orderBy('date','desc')->paginate(20);
     }
+    // public function index()
+    // {
+    //     return \App\Models\MasterTwoONine::query()
+    //         // hanya master yang punya minimal 1 relasi di masing-masing ini
+    //         ->has('breakfasts', '>=', 1)
+    //         ->has('lunches', '>=', 1)
+    //         ->has('dinners', '>=', 1)
+    //         ->withCount(['breakfasts','lunches','dinners']) // opsional: tampilkan count
+    //         ->orderBy('date', 'desc')
+    //         ->paginate(20);
+    // }
 
     public function store(Request $request) {
         $data = $request->validate([
             'name' => ['required','string','max:100'],
             'date' => ['required','date'],
         ]);
-        return response()->json(MasterTwoONine::create($data), 201);
+        return response()->json(MasterTwoONine::create($data));
     }
 
     public function show(MasterTwoONine $master) {
