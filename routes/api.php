@@ -38,8 +38,8 @@ Route::middleware('auth:sanctum')->group(function () {
     // Route::get('/me', [AuthController::class, 'me']);
     Route::apiResource('departments', DepartmentController::class);
     Route::apiResource('positions', PositionController::class);
-    // Route::get('user', UserController::class);
     Route::apiResource('users', UserController::class);
+    // Route::get('users', [UserController::class, 'index']);
     // Master data Thematic
     Route::apiResource('thematics', ThematicController::class);
     Route::apiResource('beverages', BeverageController::class);

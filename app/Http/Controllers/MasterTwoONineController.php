@@ -31,7 +31,15 @@ class MasterTwoONineController extends Controller
     }
 
     public function show(MasterTwoONine $master) {
-        return $master->load(['breakfasts','lunches','dinners']);
+        // return $master->load(['breakfasts','lunches','dinners']);
+        return $master->load([
+            'breakfasts.upsellings', 
+            'breakfasts.beverages',
+            'lunches.upsellings',
+            'lunches.beverages',
+            'dinners.upsellings',
+            'dinners.beverages',
+        ]);
     }
 
     public function update(Request $request, MasterTwoONine $master) {

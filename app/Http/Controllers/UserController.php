@@ -11,8 +11,36 @@ class UserController extends Controller
 {
     public function index()
     {
-        return User::with(['department','position'])
-            ->orderBy('id','desc')->paginate(20);
+        // return User::with(['department','position'])
+        //     ->orderBy('id','desc')->paginate(20);
+        $q = User::query()
+            ->with([
+                'department:id,code,name,work_at',
+                'position:id,code,name'
+            ]);
+
+        // exact match (bisa multi dengan koma)
+        if ($request->filled('work_at')) {
+            $values = array_filter(array_map('trim', explode(',', $request->query('work_at'))));
+            if (!empty($values)) {
+                $q->whereHas('department', function ($sub) use ($values) {
+                    $sub->whereIn('work_at', $values);
+                });
+            }
+        }
+
+        // LIKE (case-insensitive tergantung collation)
+        if ($request->filled('work_at_like')) {
+            $like = $request->query('work_at_like');
+            $q->whereHas('department', function ($sub) use ($like) {
+                $sub->where('work_at', 'like', "%{$like}%");
+            });
+        }
+
+        $perPage  = min(max((int) $request->query('per_page', 20), 1), 100);
+        $direction = strtolower($request->query('direction', 'asc')) === 'desc' ? 'desc' : 'asc';
+
+        return $q->orderBy('id', $direction)->paginate($perPage)->appends($request->query());
     }
 
     public function store(Request $request)

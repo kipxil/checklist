@@ -28,4 +28,16 @@ class BreakfastTwoONine extends Model
     public function masterTwoONine() {
         return $this->belongsTo(MasterTwoONine::class, 'master_two_o_nine_id');
     }
+    public function upsellings() {
+        return $this->morphMany(UpsellingsTwoONine::class, 'upsellable');
+    }
+    public function beverages() {
+        return $this->morphMany(BeveragesTwoONine::class, 'beverageable');
+    }
+    protected static function booted() {
+        static::deleting(function ($breakfast) {
+            $breakfast->upsellings()->delete();
+            $breakfast->beverages()->delete();
+        });
+    }
 }
