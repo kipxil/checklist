@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         // return User::with(['department','position'])
         //     ->orderBy('id','desc')->paginate(20);
