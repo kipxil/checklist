@@ -1,4 +1,3 @@
-
 <?php
 
 use Illuminate\Foundation\Application;
@@ -16,8 +15,11 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         //
         $middleware->prepend(HandleCors::class);
+        // $middleware->alias([
+        //     'admin' => \App\Http\Middleware\EnsureUserIsAdmin::class,
+        // ]);
         $middleware->alias([
-            'admin' => \App\Http\Middleware\EnsureUserIsAdmin::class,
+            'feature' => \App\Http\Middleware\FeatureAccess::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

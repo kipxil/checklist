@@ -34,8 +34,31 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Department::class);
     }
+
     public function position()
     {
         return $this->belongsTo(Position::class);
+    }
+
+    public function features(): array
+    {
+        if ($this->admin) {
+            return ['hotels', 'restaurants', 'settings'];
+        }
+
+        $depName = strtolower($this->department->name ?? '');
+        $depCode = strtoupper($this->department->code ?? '');
+        $isDeveloper = ($depName === 'developer') || ($depCode === 'DEV');
+
+        if ($isDeveloper) {
+            return ['hotels', 'restaurants', 'settings'];
+        }
+        if ($depName === 'hotel') {
+            return ['hotels'];
+        }
+        if ($depName === 'restaurant' || $depName === 'restoran') {
+            return ['restaurants'];
+        }
+        return [];
     }
 }
