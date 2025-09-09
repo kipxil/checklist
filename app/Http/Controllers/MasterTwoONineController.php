@@ -31,14 +31,35 @@ class MasterTwoONineController extends Controller
     //         ->paginate(20);
     // }
 
+    // public function store(Request $request)
+    // {
+    //     $data = $request->validate([
+    //         'name' => ['required', 'string', 'max:100'],
+    //         'date' => ['required', 'date'],
+    //         'approval' => ['sometimes', 'boolean'], // default false
+    //     ]);
+    //     return response()->json(MasterTwoONine::create($data));
+    // }
+
     public function store(Request $request)
     {
+        // 1. Validasi data input
         $data = $request->validate([
             'name' => ['required', 'string', 'max:100'],
             'date' => ['required', 'date'],
-            'approval' => ['sometimes', 'boolean'], // default false
         ]);
-        return response()->json(MasterTwoONine::create($data));
+
+        // 2. Logika approval otomatis berdasarkan position_id user
+        $user = $request->user();
+        if (in_array($user->position_id, [1, 2, 3])) {
+            $data['approval'] = true; // Langsung disetujui
+        } else {
+            $data['approval'] = false; // Perlu persetujuan manual nanti
+        }
+
+        // 3. Buat data baru
+        $master = MasterTwoONine::create($data);
+        return response()->json($master, 201);
     }
 
     public function show(MasterTwoONine $master)
@@ -54,13 +75,33 @@ class MasterTwoONineController extends Controller
         ]);
     }
 
+    // public function update(Request $request, MasterTwoONine $master)
+    // {
+    //     $data = $request->validate([
+    //         'name' => ['sometimes', 'string', 'max:100'],
+    //         'date' => ['sometimes', 'date'],
+    //         'approval' => ['sometimes', 'boolean'],
+    //     ]);
+    //     $master->update($data);
+    //     return $master;
+    // }
+
     public function update(Request $request, MasterTwoONine $master)
     {
+        // 1. Otorisasi: Hanya user dengan position_id 1, 2, atau 3 yang boleh update.
+        $user = $request->user();
+        if (!in_array($user->position_id, [1, 2, 3])) {
+            return response()->json(['message' => 'Anda tidak memiliki izin untuk mengubah data ini.'], 403);
+        }
+
+        // 2. Validasi data input
         $data = $request->validate([
             'name' => ['sometimes', 'string', 'max:100'],
             'date' => ['sometimes', 'date'],
             'approval' => ['sometimes', 'boolean'],
         ]);
+
+        // 3. Update data
         $master->update($data);
         return $master;
     }
