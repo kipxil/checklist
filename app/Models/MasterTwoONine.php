@@ -10,9 +10,23 @@ class MasterTwoONine extends Model
     use HasFactory;
 
     // protected $table = 'master_two_o_nines';
-    protected $fillable = ['name','date'];
+    protected $fillable = ['name', 'date', 'approval'];
 
-    public function breakfasts() { return $this->hasMany(BreakfastTwoONine::class); }
-    public function lunches()    { return $this->hasMany(LunchTwoONine::class); }
-    public function dinners()    { return $this->hasMany(DinnerTwoONine::class); }
+    protected $casts = [
+        'date' => 'string',
+        'approval' => 'boolean',
+    ];
+
+    public function breakfasts()
+    {
+        return $this->hasMany(BreakfastTwoONine::class);
+    }
+    public function lunches()
+    {
+        return $this->hasMany(LunchTwoONine::class);
+    }
+    public function dinners()
+    {
+        return $this->hasMany(DinnerTwoONine::class);
+    }
 }
