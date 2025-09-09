@@ -10,15 +10,15 @@ class DepartmentSeeder extends Seeder
     public function run(): void
     {
         $rows = [
-            ['code' => 'DEV',  'name' => 'Developer', 'work_at' => '-'],
-            ['code' => 'HTL',  'name' => 'Hotel',      'work_at' => 'Vasa'],
-            ['code' => 'RST',  'name' => 'Restaurant', 'work_at' => '209 Dining'],
+            ['code' => 'DEV',  'name' => 'Developer'],
+            ['code' => 'HTL',  'name' => 'Hotel'],
+            ['code' => 'RST',  'name' => 'Restaurant'],
         ];
 
         foreach ($rows as $r) {
             Department::updateOrCreate(
                 ['code' => $r['code']],
-                ['name' => $r['name'], 'work_at' => $r['work_at']]
+                ['name' => $r['name']]
             );
         }
     }

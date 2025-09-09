@@ -21,7 +21,7 @@ Route::prefix('auth')->group(function () {
         // Route::get('/me', [AuthController::class, 'me']);
         Route::post('/logout', [AuthController::class, 'logout']);
         Route::get('/me', function (\Illuminate\Http\Request $r) {
-            $u = $r->user()->load('department:id,code,name,work_at','position:id,code,name');
+            $u = $r->user()->load('department:id,code,name','position:id,code,name');
             return array_merge($u->toArray(), [
                 'features' => $u->features(), // ← tambahkan ini
             ]);

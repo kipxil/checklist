@@ -18,6 +18,7 @@ class User extends Authenticatable
         'password',
         'department_id',
         'position_id',
+        'work_at',
         'can_checklist',
         'admin',
     ];
@@ -28,6 +29,7 @@ class User extends Authenticatable
         'admin' => 'boolean',
         'can_checklist' => 'boolean',
         'email_verified_at' => 'datetime',
+        'work_at' => ['integer','nullable', 'min:0'],
     ];
 
     public function department()
