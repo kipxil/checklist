@@ -15,28 +15,34 @@ class UserController extends Controller
         //     ->orderBy('id','desc')->paginate(20);
         $q = User::query()
             ->with([
-                'department:id,code,name,work_at',
+                'department:id,code,name',
                 'position:id,code,name'
             ]);
 
-        // exact match (bisa multi dengan koma)
-        if ($request->filled('work_at')) {
-            $values = array_filter(array_map('trim', explode(',', $request->query('work_at'))));
-            if (!empty($values)) {
-                // $q->whereHas('department', function ($sub) use ($values) {
-                //     $sub->whereIn('work_at', $values);
-                // });
-                $q->whereIn('work_at', $values);
+        // Filter berdasarkan ID integer (bisa multi dengan koma)
+        if ($request->filled('work_at_ids')) { // Ganti nama parameter agar lebih jelas
+            // 1. Pecah string ID menjadi array
+            $values = explode(',', $request->query('work_at_ids'));
+
+            // 2. Pastikan semua elemen adalah integer dan > 0
+            $integerIDs = array_filter(
+                array_map('intval', $values),
+                fn($id) => $id > 0
+            );
+
+            if (!empty($integerIDs)) {
+                // 3. Langsung filter di kolom 'work_at' pada tabel users
+                $q->whereIn('work_at', $integerIDs);
             }
         }
 
-        // LIKE (case-insensitive tergantung collation)
-        if ($request->filled('work_at_like')) {
-            $like = $request->query('work_at_like');
-            $q->whereHas('department', function ($sub) use ($like) {
-                $sub->where('work_at', 'like', "%{$like}%");
-            });
-        }
+        // // LIKE (case-insensitive tergantung collation)
+        // if ($request->filled('work_at_like')) {
+        //     $like = $request->query('work_at_like');
+        //     $q->whereHas('department', function ($sub) use ($like) {
+        //         $sub->where('work_at', 'like', "%{$like}%");
+        //     });
+        // }
 
         $perPage  = min(max((int) $request->query('per_page', 20), 1), 100);
         $direction = strtolower($request->query('direction', 'asc')) === 'desc' ? 'desc' : 'asc';
