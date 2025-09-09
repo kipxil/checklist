@@ -13,7 +13,7 @@ class MasterTwoONineController extends Controller
 
         // tri-state: ?approved=1 → hanya approved, ?approved=0 → hanya unapproved,
         // tanpa parameter → semua
-        if ($request->has('approved')) {
+        if ($request->filled('approved')) {
             $q->where('approval', $request->boolean('approved'));
         }
 
