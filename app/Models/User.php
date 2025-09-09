@@ -46,23 +46,32 @@ class User extends Authenticatable
 
     public function features(): array
     {
-        if ($this->admin) {
-            return ['hotels', 'restaurants', 'settings'];
-        }
-
         $depName = strtolower($this->department->name ?? '');
         $depCode = strtoupper($this->department->code ?? '');
         $isDeveloper = ($depName === 'developer') || ($depCode === 'DEV');
 
+        // base features
+        $features = [];
         if ($isDeveloper) {
-            return ['hotels', 'restaurants', 'settings'];
+            $features = ['hotels', 'restaurants', 'settings', 'approval']; // dev dapat approval
+        } else {
+            if ($depName === 'hotel') {
+                $features[] = 'hotels';
+            } elseif (in_array($depName, ['restaurant', 'restoran'])) {
+                $features[] = 'restaurants';
+            }
+
+            // posisi: Manager/Supervisor -> approval
+            $posName = strtolower($this->position->name ?? '');
+            $posCode = strtoupper($this->position->code ?? '');
+            $isMgrSpv = in_array($posName, ['manager', 'supervisor']) || in_array($posCode, ['MGR', 'SPV']);
+
+            if ($isMgrSpv) {
+                $features[] = 'approval';
+            }
         }
-        if ($depName === 'hotel') {
-            return ['hotels'];
-        }
-        if ($depName === 'restaurant' || $depName === 'restoran') {
-            return ['restaurants'];
-        }
-        return [];
+
+        // pastikan unik & rapi
+        return array_values(array_unique($features));
     }
 }
