@@ -19,20 +19,13 @@ class UserController extends Controller
                 'position:id,code,name'
             ]);
 
-        // Filter berdasarkan ID integer (bisa multi dengan koma)
-        if ($request->filled('work_at_ids')) { // Ganti nama parameter agar lebih jelas
-            // 1. Pecah string ID menjadi array
-            $values = explode(',', $request->query('work_at_ids'));
+        // Filter berdasarkan satu ID integer dari parameter 'work_at'
+        if ($request->filled('work_at')) {
+            $workAtId = (int) $request->query('work_at');
 
-            // 2. Pastikan semua elemen adalah integer dan > 0
-            $integerIDs = array_filter(
-                array_map('intval', $values),
-                fn($id) => $id > 0
-            );
-
-            if (!empty($integerIDs)) {
-                // 3. Langsung filter di kolom 'work_at' pada tabel users
-                $q->whereIn('work_at', $integerIDs);
+            // Pastikan ID valid sebelum memfilter
+            if ($workAtId > 0) {
+                $q->where('work_at', $workAtId);
             }
         }
 
