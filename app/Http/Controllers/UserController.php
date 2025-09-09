@@ -23,9 +23,10 @@ class UserController extends Controller
         if ($request->filled('work_at')) {
             $values = array_filter(array_map('trim', explode(',', $request->query('work_at'))));
             if (!empty($values)) {
-                $q->whereHas('department', function ($sub) use ($values) {
-                    $sub->whereIn('work_at', $values);
-                });
+                // $q->whereHas('department', function ($sub) use ($values) {
+                //     $sub->whereIn('work_at', $values);
+                // });
+                $q->whereIn('work_at', $values);
             }
         }
 
@@ -46,12 +47,13 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'nik' => ['required','string','max:50','unique:users,nik'],
-            'name' => ['required','string','max:100'],
-            'email' => ['nullable','email','max:150','unique:users,email'],
-            'password' => ['required','string','min:6'],
-            'department_id' => ['nullable','exists:departments,id'],
-            'position_id' => ['nullable','exists:positions,id'],
+            'nik' => ['required', 'string', 'max:50', 'unique:users,nik'],
+            'name' => ['required', 'string', 'max:100'],
+            'email' => ['nullable', 'email', 'max:150', 'unique:users,email'],
+            'password' => ['required', 'string', 'min:6'],
+            'department_id' => ['nullable', 'exists:departments,id'],
+            'position_id' => ['nullable', 'exists:positions,id'],
+            'work_at' => ['nullable', 'integer', 'min:0'],
             'can_checklist' => ['boolean'],
             'admin' => ['boolean'],
         ]);
@@ -59,23 +61,24 @@ class UserController extends Controller
         $data['password'] = Hash::make($data['password']);
         $user = User::create($data);
 
-        return response()->json($user->load(['department','position']), 201);
+        return response()->json($user->load(['department', 'position']), 201);
     }
 
     public function show(User $user)
     {
-        return $user->load(['department','position']);
+        return $user->load(['department', 'position']);
     }
 
     public function update(Request $request, User $user)
     {
         $data = $request->validate([
-            'nik' => ['sometimes','string','max:50', Rule::unique('users','nik')->ignore($user->id)],
-            'name' => ['sometimes','string','max:100'],
-            'email' => ['nullable','email','max:150', Rule::unique('users','email')->ignore($user->id)],
-            'password' => ['sometimes','string','min:6'],
-            'department_id' => ['nullable','exists:departments,id'],
-            'position_id' => ['nullable','exists:positions,id'],
+            'nik' => ['sometimes', 'string', 'max:50', Rule::unique('users', 'nik')->ignore($user->id)],
+            'name' => ['sometimes', 'string', 'max:100'],
+            'email' => ['nullable', 'email', 'max:150', Rule::unique('users', 'email')->ignore($user->id)],
+            'password' => ['sometimes', 'string', 'min:6'],
+            'department_id' => ['nullable', 'exists:departments,id'],
+            'position_id' => ['nullable', 'exists:positions,id'],
+            'work_at' => ['nullable', 'integer', 'min:0'],
             'can_checklist' => ['boolean'],
             'admin' => ['boolean'],
         ]);
@@ -85,7 +88,7 @@ class UserController extends Controller
         }
 
         $user->update($data);
-        return $user->load(['department','position']);
+        return $user->load(['department', 'position']);
     }
 
     public function destroy(User $user)
